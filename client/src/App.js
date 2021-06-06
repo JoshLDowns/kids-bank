@@ -1,23 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import './styles/app.css';
+import { Router } from "@reach/router";
+import Dashboard from "./pages/Dashboard";
+// import Account from "./pages/Account";
+
+import { useThemeContext } from "./context/theme"
 
 function App() {
+  const { theme } = useThemeContext();
+  console.log(theme);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={`app-wrapper ${theme}`}>
+      <Router>
+        <Dashboard path="/" />
+        {/* <Account path="/account/:id" /> */}
+      </Router>
     </div>
   );
 }

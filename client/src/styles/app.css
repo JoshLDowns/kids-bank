@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Oswald&display=swap');
+
+.app-wrapper {
+  width: 100vw;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+.light {
+  background-color: #ccffff;
+  color: #6600cc;
+}
+
+.dark {
+  background-color: #6600cc;
+  color: #ccffff;
+}
+
+.title-text {
+  font-family: 'Luckiest Guy';
+  letter-spacing: 1px;
+}
+
+.body-text {
+  font-family: Oswald
+}
+
+.large {
+  font-size: 2.5rem;
+}
+
+.med {
+  font-size: 1.5rem;
+}
+
+.small {
+  font-size: .75rem;
+}
+
+.dashboard {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  width: 300px;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 0 25px;
+  text-align: center;
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  width: 250px;
+  height: 250px;
+  border: 5px solid #ff9999;
+}
+
+.avatar:hover {
+  cursor: pointer;
+  border: 5px solid #ffcc99;
+}
+
+.top-right-absolute {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.top-left-absolute {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+  max-width: 1200px;
+  justify-content: center;
+}
