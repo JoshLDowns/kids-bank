@@ -29,7 +29,7 @@ router.get("/:id", (req, res) => {
 router.patch("/:id/update", (req, res) => {
   const id = req.params.id;
   const { field, value } = req.body;
-  Accounts.findByIdAndUpdate({ _id: id }, { [field]: value }, { new: true })
+  Accounts.findByIdAndUpdate(id, { [field]: value }, { new: true, useFindAndModify: false })
     .then((data) => {
       res.status(200).json(data);
     })
@@ -39,3 +39,41 @@ router.patch("/:id/update", (req, res) => {
         .json({ errors: err.toString(), info: "Account could not be updated" });
     });
 });
+
+router.post("/new", (req, res) => {
+  const { username, spend, savings, avatarUrl } = req.body;
+  const newAccount = new Accounts({
+    username: username,
+    spend: spend,
+    savings: savings,
+    wishList: [],
+    avatarUrl: avatarUrl,
+  });
+  newAccount
+    .save()
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      res
+        .status(400)
+        .json({ errors: err.toString(), info: "Account could not be created" });
+    });
+});
+
+router.delete("/:id", (req, res) => {
+  const id = req.params.id;
+  const query = Accounts.where({ _id: id });
+  query
+    .deleteOne()
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      res
+        .status(400)
+        .json({ errors: err.toString(), info: "Account could not be created" });
+    });
+});
+
+module.exports = router;
