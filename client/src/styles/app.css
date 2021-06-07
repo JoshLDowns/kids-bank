@@ -5,6 +5,7 @@
   overflow-x: hidden;
   min-height: 100vh;
   position: relative;
+  transition: 0.5s background-color ease;
 }
 
 .light {
@@ -92,6 +93,16 @@
   left: 25px;
 }
 
+.top-left-absolute-block {
+  position: absolute;
+  height: 37.5px;
+  top: 62.5px;
+  left: 25px;
+  width: 75px;
+  z-index: 5;
+  transition: 0.5s background-color ease;
+}
+
 .top-left-absolute:hover, .top-right-absolute:hover {
   cursor: pointer;
 }
@@ -114,6 +125,12 @@
 
 .around {
   justify-content: space-around;
+}
+
+.toggle {
+  width: 75px;
+  height: 75px;
+  transition: 0.5s all ease;
 }
 
 @media (max-width: 768px) {

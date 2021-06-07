@@ -10,20 +10,23 @@ const Dashboard = () => {
   const { isLoading } = useFetch("/api/accounts", "accounts");
 
   const handleClick = (id) => {
-    navigate(`/account/${id}`)
-  }
+    navigate(`/account/${id}`);
+  };
 
   return (
     <div className="container" name="dashboard">
       <div className="top-left-absolute">
-        <h1 className="body-text med" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
-          {theme === "light" ? "Dark Mode" : "Light Mode"}
-        </h1>
+        <img
+          src="/images/theme-toggle.png"
+          alt="theme-toggle"
+          className="toggle"
+          style={{ transform: `rotate(${theme === "light" ? "180deg" : "0"}` }}
+          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+        />
       </div>
+      <div className={`top-left-absolute-block ${theme}`} />
       <div className="top-right-absolute">
-        <h1 className="body-text med">
-          Add Account
-        </h1>
+        <h1 className="body-text med">Add Account</h1>
       </div>
       {isLoading && (
         <>
