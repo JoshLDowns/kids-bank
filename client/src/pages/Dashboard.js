@@ -1,9 +1,11 @@
 import { useFetch } from "../hooks/useFetch";
 import { useAccountsContext } from "../context/accounts";
+import { useThemeContext } from "../context/theme";
 import { navigate } from "@reach/router";
 
 const Dashboard = () => {
   const { accounts } = useAccountsContext();
+  const { setTheme, theme } = useThemeContext();
 
   const { isLoading } = useFetch("/api/accounts", "accounts");
 
@@ -13,6 +15,16 @@ const Dashboard = () => {
 
   return (
     <div className="container" name="dashboard">
+      <div className="top-left-absolute">
+        <h1 className="body-text med" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+          {theme === "light" ? "Dark Mode" : "Light Mode"}
+        </h1>
+      </div>
+      <div className="top-right-absolute">
+        <h1 className="body-text med">
+          Add Account
+        </h1>
+      </div>
       {isLoading && (
         <>
           <h1 className="title-text large">... Loading!</h1>

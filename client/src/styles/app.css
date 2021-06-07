@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Oswald&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Chelsea+Market&display=swap');
 
 .app-wrapper {
   width: 100vw;
@@ -18,12 +18,13 @@
 }
 
 .title-text {
-  font-family: 'Luckiest Guy';
+  font-family: 'Chelsea Market';
   letter-spacing: 1px;
 }
 
 .body-text {
-  font-family: Oswald
+  font-family: Anton;
+  letter-spacing: 1px;
 }
 
 .large {
@@ -71,24 +72,28 @@
   object-fit: cover;
   width: 250px;
   height: 250px;
-  border: 5px solid #ff9999;
+  border: 10px solid #ff9999;
 }
 
 .avatar:hover {
   cursor: pointer;
-  border: 5px solid #ffcc99;
+  border: 10px solid #ffcc99;
 }
 
 .top-right-absolute {
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 25px;
 }
 
 .top-left-absolute {
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 25px;
+}
+
+.top-left-absolute:hover, .top-right-absolute:hover {
+  cursor: pointer;
 }
 
 .flex-row {
@@ -112,6 +117,10 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 75px 0;
+  }
+
   .flex-row {
     flex-direction: column;
   }

@@ -43,7 +43,7 @@ const Account = ({ id }) => {
       {!isLoading && activeAccount && (
         <div className="flex-row around">
           <div className="account-card" name="account-wrapper">
-            <h3 className="body-text med">{`${activeAccount.username}'s Account`}</h3>
+            <h3 className="title-text med">{`${activeAccount.username}'s Account`}</h3>
             <br />
             <img
               src={activeAccount.avatarUrl}
