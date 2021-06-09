@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { useAccountsContext } from "../context/accounts";
+import { useThemeContext } from "../context/theme";
 import { Link } from "@reach/router";
+
+import FundsModal from "../components/FundsModal";
 
 const formatMoney = (value) => {
   let moneyAr = (value / 100).toFixed(2).split(".");
@@ -21,11 +25,27 @@ const formatMoney = (value) => {
 
 const Account = ({ id }) => {
   const { activeAccount } = useAccountsContext();
+  const { setPage, theme, setModalWidth } = useThemeContext();
 
   const { isLoading } = useFetch(`/api/accounts/${id}`, "activeAccount");
 
+  const [isFundsModalOpen, setFundsModalOpen] = useState(false);
+  const [fundsType, setFundsType] = useState(null);
+
+  const handleFundModal = (type) => {
+    setModalWidth(isFundsModalOpen ? "0vw" : "100vw");
+    setFundsType(type ? type : null);
+    setFundsModalOpen(!isFundsModalOpen);
+  };
+
+  useEffect(() => {
+    setPage("account");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="container" name="active-account">
+      <FundsModal type={fundsType} handleFundsModal={handleFundModal} />
       {isLoading && (
         <>
           <h1 className="title-text large">... Loading!</h1>
@@ -41,26 +61,46 @@ const Account = ({ id }) => {
         </>
       )}
       {!isLoading && activeAccount && (
-        <div className="flex-row around">
-          <div className="account-card" name="account-wrapper">
-            <h3 className="title-text med">{`${activeAccount.username}'s Account`}</h3>
-            <br />
-            <img
-              src={activeAccount.avatarUrl}
-              alt={`${activeAccount.username} - avatar`}
-              className="avatar"
-            />
+        <>
+          <div className="flex-row around">
+            <div className="account-card" name="account-wrapper">
+              <h3 className="title-text med">{`${activeAccount.username}'s Account`}</h3>
+              <br />
+              <img
+                src={activeAccount.avatarUrl}
+                alt={`${activeAccount.username} - avatar`}
+                className="avatar"
+              />
+            </div>
+            <div class-name="account-info">
+              <h3 className="body-text large">
+                {`Available: ${formatMoney(activeAccount.spend)}`}
+              </h3>
+              <br />
+              <h3 className="body-text large">
+                {`Savings: ${formatMoney(activeAccount.savings)}`}
+              </h3>
+            </div>
           </div>
-          <div class-name="account-info">
-            <h3 className="body-text large">
-              {`Available: ${formatMoney(activeAccount.spend)}`}
-            </h3>
-            <br />
-            <h3 className="body-text large">
-              {`Savings: ${formatMoney(activeAccount.savings)}`}
-            </h3>
+          <br />
+          <br />
+          <br />
+          <br />
+          <div className="flex-row center">
+            <button
+              className={`button-${theme} large`}
+              onClick={() => handleFundModal("deposit")}
+            >
+              DEPOSIT
+            </button>
+            <button
+              className={`button-${theme} large`}
+              onClick={() => handleFundModal("withdraw")}
+            >
+              WITHDRAW
+            </button>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

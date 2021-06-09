@@ -72,7 +72,7 @@ router.delete("/:id", (req, res) => {
     .catch((err) => {
       res
         .status(400)
-        .json({ errors: err.toString(), info: "Account could not be created" });
+        .json({ errors: err.toString(), info: "Account could not be deleted" });
     });
 });
 

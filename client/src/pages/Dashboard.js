@@ -1,33 +1,34 @@
+import { useEffect } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { useAccountsContext } from "../context/accounts";
 import { useThemeContext } from "../context/theme";
 import { navigate } from "@reach/router";
 
+import NewModal from "../components/NewModal";
+
 const Dashboard = () => {
   const { accounts } = useAccountsContext();
-  const { setTheme, theme } = useThemeContext();
+  const { setPage, setModalWidth, isNewOpen, setNewOpen } = useThemeContext();
 
   const { isLoading } = useFetch("/api/accounts", "accounts");
+
+  const handleNewModal = () => {
+    setModalWidth(isNewOpen ? "0vw" : "100vw");
+    setNewOpen(!isNewOpen);
+  };
 
   const handleClick = (id) => {
     navigate(`/account/${id}`);
   };
 
+  useEffect(() => {
+    setPage("dashboard")
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
-    <div className="container" name="dashboard">
-      <div className="top-left-absolute">
-        <img
-          src="/images/theme-toggle.png"
-          alt="theme-toggle"
-          className="toggle"
-          style={{ transform: `rotate(${theme === "light" ? "180deg" : "0"}` }}
-          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-        />
-      </div>
-      <div className={`top-left-absolute-block ${theme}`} />
-      <div className="top-right-absolute">
-        <h1 className="body-text med">Add Account</h1>
-      </div>
+    <div className="container center-text" name="dashboard">
+      <NewModal handleNewModal={handleNewModal} />
       {isLoading && (
         <>
           <h1 className="title-text large">... Loading!</h1>
@@ -47,6 +48,8 @@ const Dashboard = () => {
           <h1 className="title-text large">Welcome to ABC Bank!</h1>
           <br />
           <h3 className="title-text med">Please select an account:</h3>
+          <br />
+          <br />
           <br />
           <br />
           <div className="flex-row center">

@@ -3,14 +3,16 @@ import { Router } from "@reach/router";
 import Dashboard from "./pages/Dashboard";
 import Account from "./pages/Account";
 
+import OptionBar from "./components/OptionBar";
+
 import { useThemeContext } from "./context/theme"
 
 function App() {
   const { theme } = useThemeContext();
-  console.log(theme);
   return (
     <div className={`app-wrapper ${theme}`}>
-      <Router>
+      <OptionBar />
+      <Router primary={false}>
         <Dashboard path="/" />
         <Account path="/account/:id" />
       </Router>

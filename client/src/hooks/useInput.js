@@ -34,7 +34,7 @@ export const useNumberOnlyInput = (initialValue) => {
         if (newValue === "") {
           setValue("");
         } else {
-          setValue(newValue.toFixed(2));
+          setValue(newValue);
         }
       },
     },
