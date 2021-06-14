@@ -69,7 +69,7 @@ const Account = ({ id }) => {
               <img
                 src={activeAccount.avatarUrl}
                 alt={`${activeAccount.username} - avatar`}
-                className="avatar"
+                className="avatar no-events"
               />
             </div>
             <div class-name="account-info">

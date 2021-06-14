@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useThemeContext } from "../context/theme";
 import { useAccountsContext } from "../context/accounts";
-import { useNumberOnlyInput } from "../hooks/useInput";
+import { useInput, useNumberOnlyInput } from "../hooks/useInput";
 
 const FundsModal = ({ type, handleFundsModal }) => {
   const { activeAccount, setActiveAccount } = useAccountsContext();
@@ -13,9 +13,17 @@ const FundsModal = ({ type, handleFundsModal }) => {
     reset: resetInput,
   } = useNumberOnlyInput("");
 
+  const {
+    value: pass,
+    bind: bindPass,
+    reset: resetPass,
+  } = useInput("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState(null);
+  const password = process.env.REACT_APP_USER_PASS;
 
   const handleSubmit = (field) => {
     setIsSubmit(true);
@@ -39,12 +47,24 @@ const FundsModal = ({ type, handleFundsModal }) => {
       .then((data) => {
         setActiveAccount(data);
         setIsLoading(false);
+        setIsAuthorized(false);
+        resetPass(false);
       })
       .catch((error) => {
         setError(error.info);
         setIsLoading(false);
       });
   };
+
+  const handleAuthorize = () => {
+    console.log(password)
+    if (pass === password) {
+      setError(null)
+      setIsAuthorized(true)
+    } else {
+      setError("Invalid Password!")
+    }
+  }
 
   useEffect(() => {
     if (isSubmit && !isLoading && !error) {
@@ -64,6 +84,8 @@ const FundsModal = ({ type, handleFundsModal }) => {
             className="option"
             onClick={() => {
               resetInput();
+              setIsAuthorized(false);
+              resetPass(false);
               handleFundsModal();
             }}
             style={{ transform: "rotate(45deg)" }}
@@ -74,7 +96,31 @@ const FundsModal = ({ type, handleFundsModal }) => {
             <h1 className="title-text large">... Loading!</h1>
           </>
         )}
-        {!error && !isLoading && (
+        {!isAuthorized && !isLoading && (
+          <>
+            <h3 className="body-text large">
+              Please Enter Your Password:
+            </h3>
+            <br />
+            <input className={`input-${theme} large`} {...bindPass} />
+            <br />
+            <div className="flex-row center">
+              <button
+                className={`button-${theme} large`}
+                onClick={() => handleAuthorize()}
+              >
+                SUBMIT
+              </button>
+            </div>
+            {error && (
+              <>
+              <br />
+              <h3 className="body-text med">{error}</h3>
+              </>
+            )}
+          </>
+        )}
+        {!error && !isLoading && isAuthorized && (
           <>
             <h3 className="body-text large">
               {type === "deposit"
@@ -99,7 +145,7 @@ const FundsModal = ({ type, handleFundsModal }) => {
             </div>
           </>
         )}
-        {!isLoading && error && (
+        {!isLoading && error && isAuthorized &&  (
           <>
             <h1 className="title-text large">
               It looks like something went wrong ...

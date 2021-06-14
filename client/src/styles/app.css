@@ -162,6 +162,10 @@
   justify-content: space-around;
 }
 
+.no-events {
+  pointer-events: none;
+}
+
 .toggle {
   width: 75px;
   height: 75px;
