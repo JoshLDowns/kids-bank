@@ -26,7 +26,7 @@ const Options = () => {
             <img
               src={`/images/back-${theme === "dark" ? "light" : "dark"}.png`}
               alt="back"
-              className="option opt-margin"
+              className="option opt-margin arrow"
               onClick={() => navigate("/")}
             />
             <img
@@ -34,7 +34,7 @@ const Options = () => {
                 theme === "dark" ? "light" : "dark"
               }.png`}
               alt="settings"
-              className="option"
+              className="option rotate"
             />
           </>
         )}

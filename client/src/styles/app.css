@@ -1,4 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Chelsea+Market&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Chelsea+Market&display=swap");
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes arrow {
+  0% {
+    transform: scale(1, 1) translateX(0);
+  }
+  10% {
+    transform: scale(1.1, 0.9) translateX(0);
+  }
+  30% {
+    transform: scale(0.9, 1.1) translateX(-5px);
+  }
+  50% {
+    transform: scale(1.05, 0.95) translateX(0);
+  }
+  57% {
+    transform: scale(1, 1) translateX(-2px);
+  }
+  64% {
+    transform: scale(1, 1) translateX(0);
+  }
+  100% {
+    transform: scale(1, 1) translateX(0);
+  }
+}
 
 .app-wrapper {
   width: 100vw;
@@ -19,7 +52,7 @@
 }
 
 .title-text {
-  font-family: 'Chelsea Market';
+  font-family: "Chelsea Market";
   letter-spacing: 1px;
 }
 
@@ -37,7 +70,7 @@
 }
 
 .small {
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .center-text {
@@ -65,7 +98,7 @@
   z-index: 25;
   overflow-x: hidden;
   min-height: 100vh;
-  transition: .5s width ease-in-out;
+  transition: 0.5s width ease-in-out;
 }
 
 .inner-modal {
@@ -191,30 +224,45 @@
   cursor: pointer;
 }
 
-.input-dark, .input-light, .button-dark, .button-light {
-  font-family: 'Chelsea Market';
+.rotate:hover {
+  animation: rotation 2s infinite linear;
+}
+
+.arrow:hover {
+  animation: arrow 2s infinite ease;
+}
+
+.input-dark,
+.input-light,
+.button-dark,
+.button-light {
+  font-family: "Chelsea Market";
   padding: 15px;
   margin: 15px;
   border-radius: 10px;
-  border: 5px solid #ff9999
+  border: 5px solid #ff9999;
 }
 
-.input-dark, .button-dark {
+.input-dark,
+.button-dark {
   color: #6600cc;
   background-color: #ccffff;
 }
 
-.input-light, .button-light{
+.input-light,
+.button-light {
   color: #ccffff;
   background-color: #6600cc;
 }
 
-.button-light:hover, .button-dark:hover {
+.button-light:hover,
+.button-dark:hover {
   cursor: pointer;
   border: 5px solid #ffcc99;
 }
 
-.input-light, .input-dark {
+.input-light,
+.input-dark {
   width: 90%;
   max-width: 500px;
   text-align: center;

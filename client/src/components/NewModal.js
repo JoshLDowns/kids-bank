@@ -21,12 +21,23 @@ const NewModal = ({ handleNewModal }) => {
     reset: resetInitialSavings,
   } = useNumberOnlyInput("");
 
+  const { value: pass, bind: bindPass, reset: resetPass } = useInput("");
+
   const [avatarUrl, setAvatarUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState(null);
+  const password = process.env.REACT_APP_USER_PASS;
 
   const handleSubmit = () => {
+    if (
+      name.length === 0 ||
+      initialSpend.length === 0 ||
+      initialSavings.length === 0
+    ) {
+      return setError("You must fill in a name!");
+    }
     setIsSubmit(true);
     setIsLoading(true);
     fetch(`/api/accounts`, {
@@ -45,11 +56,22 @@ const NewModal = ({ handleNewModal }) => {
       .then((data) => {
         setActiveAccounts([...activeAccounts, data]);
         setIsLoading(false);
+        setIsAuthorized(false);
+        resetPass();
       })
       .catch((error) => {
         setError(error.info);
         setIsLoading(false);
       });
+  };
+
+  const handleAuthorize = () => {
+    if (pass === password) {
+      setError(null);
+      setIsAuthorized(true);
+    } else {
+      setError("Invalid Password!");
+    }
   };
 
   useEffect(() => {
@@ -84,7 +106,10 @@ const NewModal = ({ handleNewModal }) => {
               resetName();
               resetInitialSavings();
               resetInitialSpend();
+              resetPass();
+              setIsAuthorized(false);
               setAvatarUrl("");
+              setError(null);
               handleNewModal();
             }}
             style={{ transform: "rotate(45deg)" }}
@@ -95,16 +120,59 @@ const NewModal = ({ handleNewModal }) => {
             <h1 className="title-text large">... Loading!</h1>
           </>
         )}
-        {!error && !isLoading && (
+        {!isAuthorized && !isLoading && (
           <>
-            <h3 className="body-text large">
-              Add New Account
-            </h3>
+            <h3 className="body-text large">Please Enter Your Password:</h3>
             <br />
-            <input className={`input-${theme} large`} {...bindName} placeholder="USERNAME" />
-            <input className={`input-${theme} large`} {...bindInitialSpend} placeholder="AVAILABLE $" />
-            <input className={`input-${theme} large`} {...bindInitialSavings} placeholder="SAVINGS $" />
-            
+            <form
+              onSubmit={(evt) => {
+                evt.preventDefault();
+                handleAuthorize();
+              }}
+            >
+              <input
+                className={`input-${theme} large`}
+                {...bindPass}
+                type="password"
+              />
+            </form>
+            <br />
+            <div className="flex-row center">
+              <button
+                className={`button-${theme} large`}
+                onClick={() => handleAuthorize()}
+              >
+                SUBMIT
+              </button>
+            </div>
+            {error && (
+              <>
+                <br />
+                <h3 className="body-text med">{error}</h3>
+              </>
+            )}
+          </>
+        )}
+        {!isLoading && isAuthorized && (
+          <>
+            <h3 className="body-text large">Add New Account</h3>
+            <br />
+            <input
+              className={`input-${theme} large`}
+              {...bindName}
+              placeholder="USERNAME"
+            />
+            <input
+              className={`input-${theme} large`}
+              {...bindInitialSpend}
+              placeholder="AVAILABLE $"
+            />
+            <input
+              className={`input-${theme} large`}
+              {...bindInitialSavings}
+              placeholder="SAVINGS $"
+            />
+
             <div className="flex-row center">
               <button
                 className={`button-${theme} large`}
@@ -113,15 +181,12 @@ const NewModal = ({ handleNewModal }) => {
                 SUBMIT
               </button>
             </div>
-          </>
-        )}
-        {!isLoading && error && (
-          <>
-            <h1 className="title-text large">
-              It looks like something went wrong ...
-            </h1>
-            <br />
-            <h3 className="body-text large">{`Error: ${error}`}</h3>
+            {error && (
+              <>
+                <br />
+                <h3 className="body-text med">{error}</h3>
+              </>
+            )}
           </>
         )}
       </div>

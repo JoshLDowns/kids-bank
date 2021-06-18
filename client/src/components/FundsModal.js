@@ -13,11 +13,7 @@ const FundsModal = ({ type, handleFundsModal }) => {
     reset: resetInput,
   } = useNumberOnlyInput("");
 
-  const {
-    value: pass,
-    bind: bindPass,
-    reset: resetPass,
-  } = useInput("");
+  const { value: pass, bind: bindPass, reset: resetPass } = useInput("");
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -48,7 +44,7 @@ const FundsModal = ({ type, handleFundsModal }) => {
         setActiveAccount(data);
         setIsLoading(false);
         setIsAuthorized(false);
-        resetPass(false);
+        resetPass();
       })
       .catch((error) => {
         setError(error.info);
@@ -57,14 +53,13 @@ const FundsModal = ({ type, handleFundsModal }) => {
   };
 
   const handleAuthorize = () => {
-    console.log(password)
     if (pass === password) {
-      setError(null)
-      setIsAuthorized(true)
+      setError(null);
+      setIsAuthorized(true);
     } else {
-      setError("Invalid Password!")
+      setError("Invalid Password!");
     }
-  }
+  };
 
   useEffect(() => {
     if (isSubmit && !isLoading && !error) {
@@ -85,7 +80,8 @@ const FundsModal = ({ type, handleFundsModal }) => {
             onClick={() => {
               resetInput();
               setIsAuthorized(false);
-              resetPass(false);
+              resetPass();
+              setError(null);
               handleFundsModal();
             }}
             style={{ transform: "rotate(45deg)" }}
@@ -98,11 +94,20 @@ const FundsModal = ({ type, handleFundsModal }) => {
         )}
         {!isAuthorized && !isLoading && (
           <>
-            <h3 className="body-text large">
-              Please Enter Your Password:
-            </h3>
+            <h3 className="body-text large">Please Enter Your Password:</h3>
             <br />
-            <input className={`input-${theme} large`} {...bindPass} />
+            <form
+              onSubmit={(evt) => {
+                evt.preventDefault();
+                handleAuthorize();
+              }}
+            >
+              <input
+                className={`input-${theme} large`}
+                {...bindPass}
+                type="password"
+              />
+            </form>
             <br />
             <div className="flex-row center">
               <button
@@ -114,13 +119,13 @@ const FundsModal = ({ type, handleFundsModal }) => {
             </div>
             {error && (
               <>
-              <br />
-              <h3 className="body-text med">{error}</h3>
+                <br />
+                <h3 className="body-text med">{error}</h3>
               </>
             )}
           </>
         )}
-        {!error && !isLoading && isAuthorized && (
+        {!isLoading && isAuthorized && (
           <>
             <h3 className="body-text large">
               {type === "deposit"
@@ -143,15 +148,12 @@ const FundsModal = ({ type, handleFundsModal }) => {
                 SAVINGS
               </button>
             </div>
-          </>
-        )}
-        {!isLoading && error && isAuthorized &&  (
-          <>
-            <h1 className="title-text large">
-              It looks like something went wrong ...
-            </h1>
-            <br />
-            <h3 className="body-text large">{`Error: ${error}`}</h3>
+            {error && (
+              <>
+                <br />
+                <h3 className="body-text med">{error}</h3>
+              </>
+            )}
           </>
         )}
       </div>
