@@ -19,7 +19,6 @@ const FundsModal = ({ type, handleFundsModal }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState(null);
-  const password = process.env.REACT_APP_USER_PASS;
 
   const handleSubmit = (field) => {
     setIsSubmit(true);
@@ -53,12 +52,21 @@ const FundsModal = ({ type, handleFundsModal }) => {
   };
 
   const handleAuthorize = () => {
-    if (pass === password) {
-      setError(null);
-      setIsAuthorized(true);
-    } else {
-      setError("Invalid Password!");
-    }
+    fetch("/api/accounts/authorize", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password: pass }),
+    })
+      .then((res) => res.json())
+      .then((_data) => {
+        setError(null);
+        setIsAuthorized(true);
+      })
+      .catch((error) => {
+        setError(error.info);
+      });
   };
 
   useEffect(() => {
@@ -133,7 +141,10 @@ const FundsModal = ({ type, handleFundsModal }) => {
                 : "How much would you like to withdraw?"}
             </h3>
             <br />
-            <input className={`input-${theme} large full-width`} {...bindInput} />
+            <input
+              className={`input-${theme} large full-width`}
+              {...bindInput}
+            />
             <div className="flex-row center">
               <button
                 className={`button-${theme} large`}

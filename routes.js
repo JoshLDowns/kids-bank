@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const Accounts = require("./models");
@@ -75,5 +76,14 @@ router.delete("/:id", (req, res) => {
         .json({ errors: err.toString(), info: "Account could not be deleted" });
     });
 });
+
+router.post("/authorize", (req, res) => {
+  const { password } = req.body;
+  if (password === process.env.USER_PASS) {
+    res.status(200).json({status: "ok"})
+  } else {
+    res.status(400).json({errors: "invalid", info: "Invalid Password"})
+  }
+})
 
 module.exports = router;
