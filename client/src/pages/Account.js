@@ -3,26 +3,12 @@ import { useFetch } from "../hooks/useFetch";
 import { useAccountsContext } from "../context/accounts";
 import { useThemeContext } from "../context/theme";
 import { Link } from "@reach/router";
+import { formatMoney } from "../helpers/formatMoney";
 
 import FundsModal from "../components/FundsModal";
 import SettingsModal from "../components/SettingsModal";
-
-const formatMoney = (value) => {
-  let moneyAr = (value / 100).toFixed(2).split(".");
-  if (moneyAr[0].length > 3) {
-    let preDecimalAr = moneyAr[0].split("").reverse();
-    let formattedPreDec = preDecimalAr
-      .map((num, i) =>
-        (i + 1) % 3 === 0 && i + 1 !== preDecimalAr.length ? "," + num : num
-      )
-      .reverse()
-      .join("");
-    let returnString = "$" + formattedPreDec + "." + moneyAr[1];
-    return returnString;
-  } else {
-    return "$" + moneyAr[0] + "." + moneyAr[1];
-  }
-};
+import Wishlist from "../components/Wishlist";
+import Loading from "../components/Loading";
 
 const Account = ({ id }) => {
   const { activeAccount } = useAccountsContext();
@@ -52,13 +38,13 @@ const Account = ({ id }) => {
 
   return (
     <div className="container" name="active-account">
-      <FundsModal type={fundsType} handleFundsModal={handleFundModal} />
-      <SettingsModal handleSettingsModal={handleSettingsModal} />
-      {isLoading && (
-        <>
-          <h1 className="title-text large">... Loading!</h1>
-        </>
+      {isFundsModalOpen && (
+        <FundsModal type={fundsType} handleFundsModal={handleFundModal} />
       )}
+      {isSettingsOpen && (
+        <SettingsModal handleSettingsModal={handleSettingsModal} />
+      )}
+      {isLoading && <Loading />}
       {!isLoading && !activeAccount && (
         <>
           <h1 className="title-text large">Account not found ...</h1>
@@ -108,6 +94,9 @@ const Account = ({ id }) => {
               WITHDRAW
             </button>
           </div>
+          <br />
+          <br />
+          <Wishlist />
         </>
       )}
     </div>

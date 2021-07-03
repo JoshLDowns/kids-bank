@@ -131,7 +131,7 @@ const NewModal = ({ handleNewModal }) => {
               }}
             >
               <input
-                className={`input-${theme} large`}
+                className={`input-${theme} large full-width`}
                 {...bindPass}
                 type="password"
               />
@@ -158,17 +158,17 @@ const NewModal = ({ handleNewModal }) => {
             <h3 className="body-text large">Add New Account</h3>
             <br />
             <input
-              className={`input-${theme} large`}
+              className={`input-${theme} large full-width`}
               {...bindName}
               placeholder="USERNAME"
             />
             <input
-              className={`input-${theme} large`}
+              className={`input-${theme} large full-width`}
               {...bindInitialSpend}
               placeholder="AVAILABLE $"
             />
             <input
-              className={`input-${theme} large`}
+              className={`input-${theme} large full-width`}
               {...bindInitialSavings}
               placeholder="SAVINGS $"
             />

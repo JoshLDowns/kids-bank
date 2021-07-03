@@ -103,7 +103,7 @@ const FundsModal = ({ type, handleFundsModal }) => {
               }}
             >
               <input
-                className={`input-${theme} large`}
+                className={`input-${theme} large full-width`}
                 {...bindPass}
                 type="password"
               />
@@ -133,7 +133,7 @@ const FundsModal = ({ type, handleFundsModal }) => {
                 : "How much would you like to withdraw?"}
             </h3>
             <br />
-            <input className={`input-${theme} large`} {...bindInput} />
+            <input className={`input-${theme} large full-width`} {...bindInput} />
             <div className="flex-row center">
               <button
                 className={`button-${theme} large`}

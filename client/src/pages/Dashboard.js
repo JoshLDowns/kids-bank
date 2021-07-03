@@ -5,6 +5,7 @@ import { useThemeContext } from "../context/theme";
 import { navigate } from "@reach/router";
 
 import NewModal from "../components/NewModal";
+import Loading from "../components/Loading";
 
 const Dashboard = () => {
   const { accounts } = useAccountsContext();
@@ -22,18 +23,14 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    setPage("dashboard")
+    setPage("dashboard");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   return (
     <div className="container center-text" name="dashboard">
       <NewModal handleNewModal={handleNewModal} />
-      {isLoading && (
-        <>
-          <h1 className="title-text large">... Loading!</h1>
-        </>
-      )}
+      {isLoading && <Loading />}
       {!isLoading && accounts.length === 0 && (
         <>
           <h1 className="title-text large">Welcome to ABC Bank!</h1>
