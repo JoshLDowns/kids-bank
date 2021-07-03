@@ -5,6 +5,7 @@ import { useThemeContext } from "../context/theme";
 import { Link } from "@reach/router";
 
 import FundsModal from "../components/FundsModal";
+import SettingsModal from "../components/SettingsModal";
 
 const formatMoney = (value) => {
   let moneyAr = (value / 100).toFixed(2).split(".");
@@ -25,7 +26,8 @@ const formatMoney = (value) => {
 
 const Account = ({ id }) => {
   const { activeAccount } = useAccountsContext();
-  const { setPage, theme, setModalWidth } = useThemeContext();
+  const { setPage, theme, setModalWidth, isSettingsOpen, setSettingsOpen } =
+    useThemeContext();
 
   const { isLoading } = useFetch(`/api/accounts/${id}`, "activeAccount");
 
@@ -38,6 +40,11 @@ const Account = ({ id }) => {
     setFundsModalOpen(!isFundsModalOpen);
   };
 
+  const handleSettingsModal = () => {
+    setModalWidth(isSettingsOpen ? "0vw" : "100vw");
+    setSettingsOpen(!isSettingsOpen);
+  };
+
   useEffect(() => {
     setPage("account");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,6 +53,7 @@ const Account = ({ id }) => {
   return (
     <div className="container" name="active-account">
       <FundsModal type={fundsType} handleFundsModal={handleFundModal} />
+      <SettingsModal handleSettingsModal={handleSettingsModal} />
       {isLoading && (
         <>
           <h1 className="title-text large">... Loading!</h1>

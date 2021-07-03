@@ -7,6 +7,7 @@ export const ThemeWrapper = ({ children }) => {
   const [page, setPage] = useState("dashboard");
   const [modalWidth, setModalWidth] = useState("0vw");
   const [isNewOpen, setNewOpen] = useState(false);
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   let themeState = {
     theme,
@@ -17,6 +18,8 @@ export const ThemeWrapper = ({ children }) => {
     setModalWidth,
     isNewOpen,
     setNewOpen,
+    isSettingsOpen,
+    setSettingsOpen,
   };
 
   return (

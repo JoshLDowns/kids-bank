@@ -2,13 +2,18 @@ import { useThemeContext } from "../context/theme";
 import { navigate } from "@reach/router";
 
 const Options = () => {
-  const { page, theme, setModalWidth, isNewOpen, setNewOpen } =
+  const { page, theme, setModalWidth, isNewOpen, setNewOpen, isSettingsOpen, setSettingsOpen } =
     useThemeContext();
 
   const handleNewModal = () => {
     setModalWidth(isNewOpen ? "0vw" : "100vw");
     setNewOpen(!isNewOpen);
   };
+
+  const handleSettingsModal = () => {
+    setModalWidth(isSettingsOpen ? "0vw" : "100vw");
+    setSettingsOpen(!isSettingsOpen)
+  }
 
   return (
     <>
@@ -35,6 +40,7 @@ const Options = () => {
               }.png`}
               alt="settings"
               className="option rotate"
+              onClick={handleSettingsModal}
             />
           </>
         )}
