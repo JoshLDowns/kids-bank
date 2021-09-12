@@ -39,12 +39,12 @@ const Options = () => {
           <>
             {isAuthenticated && (
               <>
-                <button
-                  className={`button-${theme} med`}
+                <img
+                  src={`/images/add-${theme === "dark" ? "light" : "dark"}.png`}
+                  alt="add account"
+                  className="option"
                   onClick={handleNewModal}
-                >
-                  ADD ACCOUNT
-                </button>
+                />
                 <button className={`button-${theme} med`} onClick={logout}>
                   LOGOUT
                 </button>
