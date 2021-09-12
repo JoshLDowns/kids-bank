@@ -1,25 +1,94 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { useAccountsContext } from "../context/accounts";
 import { useThemeContext } from "../context/theme";
+import { useAuthContext } from "../context/auth";
 import { navigate } from "@reach/router";
 
 import NewModal from "../components/NewModal";
+import LoginModal from "../components/LoginModal";
 import Loading from "../components/Loading";
 
 const Dashboard = () => {
   const { accounts } = useAccountsContext();
-  const { setPage, setModalWidth, isNewOpen, setNewOpen } = useThemeContext();
+  const {
+    setPage,
+    setModalWidth,
+    isNewOpen,
+    setNewOpen,
+    isLoginOpen,
+    setLoginOpen,
+    theme,
+  } = useThemeContext();
+  const {
+    isLoading: isAuthLoading,
+    bearer,
+    isAuthenticated,
+  } = useAuthContext();
 
   const { isLoading } = useFetch("/api/accounts", "accounts");
+
+  const [isUpdateAllowanceLoading, setUpdateAllowanceLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleNewModal = () => {
     setModalWidth(isNewOpen ? "0vw" : "100vw");
     setNewOpen(!isNewOpen);
   };
 
+  const handleAuthModal = () => {
+    setModalWidth(isLoginOpen ? "0vw" : "100vw");
+    setLoginOpen(!isLoginOpen);
+  };
+
   const handleClick = (id) => {
     navigate(`/account/${id}`);
+  };
+
+  const handleAddAllowance = async () => {
+    console.log("adding allowance!");
+    setUpdateAllowanceLoading(true);
+    try {
+      for (let i = 0; i < accounts.length; i++) {
+        const spendResp = await fetch(`/api/accounts/${accounts[i]._id}/update`, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${bearer}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            field: ["spend"],
+            value: 500 + accounts[i].spend
+          }),
+        });
+        const spendRespJson = await spendResp.json();
+        if (spendRespJson.errors) {
+          throw spendRespJson.info;
+        }
+        const savingsResp = await fetch(
+          `/api/accounts/${accounts[i]._id}/update`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${bearer}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              field: ["savings"],
+              value: 500 + accounts[i].savings,
+            }),
+          }
+        );
+        const savingsRespJson = await savingsResp.json();
+        if (savingsRespJson.errors) {
+          throw savingsRespJson.info;
+        }
+      }
+      setError(null);
+    } catch (err) {
+      setError(err);
+    }
+    setUpdateAllowanceLoading(false);
   };
 
   useEffect(() => {
@@ -30,8 +99,9 @@ const Dashboard = () => {
   return (
     <div className="container center-text" name="dashboard">
       <NewModal handleNewModal={handleNewModal} />
-      {isLoading && <Loading />}
-      {!isLoading && accounts.length === 0 && (
+      <LoginModal handleLoginModal={handleAuthModal} />
+      {(isLoading || isAuthLoading || isUpdateAllowanceLoading) && <Loading />}
+      {!isLoading && !isAuthLoading && accounts.length === 0 && (
         <>
           <h1 className="title-text large">Welcome to ABC Bank!</h1>
           <br />
@@ -40,7 +110,7 @@ const Dashboard = () => {
           </h3>
         </>
       )}
-      {!isLoading && accounts.length > 0 && (
+      {!isLoading && !isAuthLoading && accounts.length > 0 && (
         <>
           <h1 className="title-text large">Welcome to ABC Bank!</h1>
           <br />
@@ -63,6 +133,23 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
+          {isAuthenticated && (
+            <>
+              <br />
+              <button
+                className={`button-${theme} large`}
+                onClick={handleAddAllowance}
+              >
+                ADD ALLOWANCE
+              </button>
+              {error && (
+                <>
+                  <br />
+                  <h3 className="body-text med">{error}</h3>
+                </>
+              )}
+            </>
+          )}
         </>
       )}
     </div>

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useThemeContext } from "../context/theme";
 import { useAccountsContext } from "../context/accounts";
+import { useAuthContext } from "../context/auth";
 import { useInput, useNumberOnlyInput } from "../hooks/useInput";
 
 const NewModal = ({ handleNewModal }) => {
   const { activeAccounts, setActiveAccounts } = useAccountsContext();
   const { theme, modalWidth } = useThemeContext();
+  const { bearer } = useAuthContext();
 
   const { value: name, bind: bindName, reset: resetName } = useInput("");
 
@@ -21,12 +23,9 @@ const NewModal = ({ handleNewModal }) => {
     reset: resetInitialSavings,
   } = useNumberOnlyInput("");
 
-  const { value: pass, bind: bindPass, reset: resetPass } = useInput("");
-
   const [avatarUrl, setAvatarUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSubmit = () => {
@@ -42,6 +41,7 @@ const NewModal = ({ handleNewModal }) => {
     fetch(`/api/accounts`, {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${bearer}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -55,30 +55,10 @@ const NewModal = ({ handleNewModal }) => {
       .then((data) => {
         setActiveAccounts([...activeAccounts, data]);
         setIsLoading(false);
-        setIsAuthorized(false);
-        resetPass();
       })
       .catch((error) => {
         setError(error.info);
         setIsLoading(false);
-      });
-  };
-
-  const handleAuthorize = () => {
-    fetch("/api/accounts/authorize", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ password: pass }),
-    })
-      .then((res) => res.json())
-      .then((_data) => {
-        setError(null);
-        setIsAuthorized(true);
-      })
-      .catch((error) => {
-        setError(error.info);
       });
   };
 
@@ -114,8 +94,6 @@ const NewModal = ({ handleNewModal }) => {
               resetName();
               resetInitialSavings();
               resetInitialSpend();
-              resetPass();
-              setIsAuthorized(false);
               setAvatarUrl("");
               setError(null);
               handleNewModal();
@@ -128,40 +106,7 @@ const NewModal = ({ handleNewModal }) => {
             <h1 className="title-text large">... Loading!</h1>
           </>
         )}
-        {!isAuthorized && !isLoading && (
-          <>
-            <h3 className="body-text large">Please Enter Your Password:</h3>
-            <br />
-            <form
-              onSubmit={(evt) => {
-                evt.preventDefault();
-                handleAuthorize();
-              }}
-            >
-              <input
-                className={`input-${theme} large full-width`}
-                {...bindPass}
-                type="password"
-              />
-            </form>
-            <br />
-            <div className="flex-row center">
-              <button
-                className={`button-${theme} large`}
-                onClick={() => handleAuthorize()}
-              >
-                SUBMIT
-              </button>
-            </div>
-            {error && (
-              <>
-                <br />
-                <h3 className="body-text med">{error}</h3>
-              </>
-            )}
-          </>
-        )}
-        {!isLoading && isAuthorized && (
+        {!isLoading && (
           <>
             <h3 className="body-text large">Add New Account</h3>
             <br />

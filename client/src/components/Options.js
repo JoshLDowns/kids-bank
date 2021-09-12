@@ -1,9 +1,21 @@
 import { useThemeContext } from "../context/theme";
+import { useAuthContext } from "../context/auth";
 import { navigate } from "@reach/router";
 
 const Options = () => {
-  const { page, theme, setModalWidth, isNewOpen, setNewOpen, isSettingsOpen, setSettingsOpen } =
-    useThemeContext();
+  const {
+    page,
+    theme,
+    setModalWidth,
+    isNewOpen,
+    setNewOpen,
+    isSettingsOpen,
+    setSettingsOpen,
+    isLoginOpen,
+    setLoginOpen,
+  } = useThemeContext();
+
+  const { isAuthenticated, logout } = useAuthContext();
 
   const handleNewModal = () => {
     setModalWidth(isNewOpen ? "0vw" : "100vw");
@@ -12,19 +24,41 @@ const Options = () => {
 
   const handleSettingsModal = () => {
     setModalWidth(isSettingsOpen ? "0vw" : "100vw");
-    setSettingsOpen(!isSettingsOpen)
-  }
+    setSettingsOpen(!isSettingsOpen);
+  };
+
+  const handleAuthModal = () => {
+    setModalWidth(isLoginOpen ? "0vw" : "100vw");
+    setLoginOpen(!isLoginOpen);
+  };
 
   return (
     <>
       <div className="top-right-absolute">
         {page === "dashboard" && (
-          <img
-            src={`/images/add-${theme === "dark" ? "light" : "dark"}.png`}
-            alt="add account"
-            className="option"
-            onClick={handleNewModal}
-          />
+          <>
+            {isAuthenticated && (
+              <>
+                <button
+                  className={`button-${theme} med`}
+                  onClick={handleNewModal}
+                >
+                  ADD ACCOUNT
+                </button>
+                <button className={`button-${theme} med`} onClick={logout}>
+                  LOGOUT
+                </button>
+              </>
+            )}
+            {!isAuthenticated && (
+              <button
+                className={`button-${theme} med`}
+                onClick={handleAuthModal}
+              >
+                LOGIN
+              </button>
+            )}
+          </>
         )}
         {page === "account" && (
           <>

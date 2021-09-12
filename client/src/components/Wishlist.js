@@ -105,13 +105,11 @@ const Wishlist = () => {
       <br />
       <div className="flex-row between">
         <input
-          style={{ margin: 0 }}
           className={`input-${theme} half-width med`}
           {...bindItem}
           placeholder="Item"
         />
         <input
-          style={{ margin: 0 }}
           className={`input-${theme} quarter-width med`}
           {...bindCost}
           placeholder="Cost"

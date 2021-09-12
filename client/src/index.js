@@ -5,14 +5,17 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AccountsWrapper } from "./context/accounts";
 import { ThemeWrapper } from "./context/theme";
+import { AuthWrapper } from "./context/auth";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeWrapper>
-      <AccountsWrapper>
-        <App />
-      </AccountsWrapper>
-    </ThemeWrapper>
+    <AuthWrapper>
+      <ThemeWrapper>
+        <AccountsWrapper>
+          <App />
+        </AccountsWrapper>
+      </ThemeWrapper>
+    </AuthWrapper>
   </React.StrictMode>,
   document.getElementById("root")
 );

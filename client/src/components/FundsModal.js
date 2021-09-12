@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useThemeContext } from "../context/theme";
 import { useAccountsContext } from "../context/accounts";
-import { useInput, useNumberOnlyInput } from "../hooks/useInput";
+import { useAuthContext } from "../context/auth";
+import { useNumberOnlyInput } from "../hooks/useInput";
 
 const FundsModal = ({ type, handleFundsModal }) => {
   const { activeAccount, setActiveAccount } = useAccountsContext();
   const { theme, modalWidth } = useThemeContext();
+  const { bearer } = useAuthContext();
 
   const {
     value: input,
@@ -13,11 +15,9 @@ const FundsModal = ({ type, handleFundsModal }) => {
     reset: resetInput,
   } = useNumberOnlyInput("");
 
-  const { value: pass, bind: bindPass, reset: resetPass } = useInput("");
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSubmit = (field) => {
@@ -26,6 +26,7 @@ const FundsModal = ({ type, handleFundsModal }) => {
     fetch(`/api/accounts/${activeAccount._id}/update`, {
       method: "PATCH",
       headers: {
+        "Authorization": `Bearer ${bearer}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -42,30 +43,10 @@ const FundsModal = ({ type, handleFundsModal }) => {
       .then((data) => {
         setActiveAccount(data);
         setIsLoading(false);
-        setIsAuthorized(false);
-        resetPass();
       })
       .catch((error) => {
         setError(error.info);
         setIsLoading(false);
-      });
-  };
-
-  const handleAuthorize = () => {
-    fetch("/api/accounts/authorize", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ password: pass }),
-    })
-      .then((res) => res.json())
-      .then((_data) => {
-        setError(null);
-        setIsAuthorized(true);
-      })
-      .catch((error) => {
-        setError(error.info);
       });
   };
 
@@ -87,8 +68,6 @@ const FundsModal = ({ type, handleFundsModal }) => {
             className="option"
             onClick={() => {
               resetInput();
-              setIsAuthorized(false);
-              resetPass();
               setError(null);
               handleFundsModal();
             }}
@@ -100,40 +79,7 @@ const FundsModal = ({ type, handleFundsModal }) => {
             <h1 className="title-text large">... Loading!</h1>
           </>
         )}
-        {!isAuthorized && !isLoading && (
-          <>
-            <h3 className="body-text large">Please Enter Your Password:</h3>
-            <br />
-            <form
-              onSubmit={(evt) => {
-                evt.preventDefault();
-                handleAuthorize();
-              }}
-            >
-              <input
-                className={`input-${theme} large full-width`}
-                {...bindPass}
-                type="password"
-              />
-            </form>
-            <br />
-            <div className="flex-row center">
-              <button
-                className={`button-${theme} large`}
-                onClick={() => handleAuthorize()}
-              >
-                SUBMIT
-              </button>
-            </div>
-            {error && (
-              <>
-                <br />
-                <h3 className="body-text med">{error}</h3>
-              </>
-            )}
-          </>
-        )}
-        {!isLoading && isAuthorized && (
+        {!isLoading && (
           <>
             <h3 className="body-text large">
               {type === "deposit"

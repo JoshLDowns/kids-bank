@@ -6,6 +6,7 @@ const app = express();
 const mongoose = require("mongoose");
 
 const accounts = require("./routes");
+const auth = require("./auth");
 
 const MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@kids-bank-cluster.siwok.mongodb.net/accounts?retryWrites=true&w=majority`;
 console.log(MONGO_URI);
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/accounts", accounts);
+app.use("/api/authorize", auth);
 
 app.get("*", (_req, res) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));

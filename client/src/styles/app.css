@@ -101,6 +101,7 @@
   left: 0;
   z-index: 25;
   overflow-x: hidden;
+  height: 100%;
   min-height: 100vh;
   transition: 0.5s width ease-in-out;
 }
@@ -160,6 +161,7 @@
   right: 25px;
   display: flex;
   height: 50px;
+  align-items: center;
 }
 
 .top-left-absolute {
@@ -245,6 +247,7 @@
   margin: 15px;
   border-radius: 10px;
   border: 5px solid #ff9999;
+  box-sizing: border-box;
 }
 
 .input-dark,
@@ -300,7 +303,7 @@
 }
 
 .lds-light div {
-  background: #6600cc
+  background: #6600cc;
 }
 
 .lds-dark div {
@@ -388,6 +391,18 @@
 
   .inner-modal {
     width: 90%;
-    padding-top: 30px;
+    padding-top: 100px;
+    margin-bottom: 50px;
+    max-height: 100vh;
+    justify-content: flex-start;
+  }
+
+  .half-width {
+    width: 90%;
+    margin: 0 0 10px 0;
+  }
+
+  .quarter-width {
+    width: 90%;
   }
 }

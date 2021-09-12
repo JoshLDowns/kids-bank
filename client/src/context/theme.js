@@ -8,6 +8,7 @@ export const ThemeWrapper = ({ children }) => {
   const [modalWidth, setModalWidth] = useState("0vw");
   const [isNewOpen, setNewOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isLoginOpen, setLoginOpen] = useState(false);
 
   let themeState = {
     theme,
@@ -20,6 +21,8 @@ export const ThemeWrapper = ({ children }) => {
     setNewOpen,
     isSettingsOpen,
     setSettingsOpen,
+    isLoginOpen,
+    setLoginOpen
   };
 
   return (

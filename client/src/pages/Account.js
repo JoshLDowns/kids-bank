@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { useAccountsContext } from "../context/accounts";
 import { useThemeContext } from "../context/theme";
+import { useAuthContext } from "../context/auth";
 import { Link } from "@reach/router";
 import { formatMoney } from "../helpers/formatMoney";
 
@@ -14,6 +15,7 @@ const Account = ({ id }) => {
   const { activeAccount } = useAccountsContext();
   const { setPage, theme, setModalWidth, isSettingsOpen, setSettingsOpen } =
     useThemeContext();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuthContext();
 
   const { isLoading } = useFetch(`/api/accounts/${id}`, "activeAccount");
 
@@ -44,8 +46,8 @@ const Account = ({ id }) => {
       {isSettingsOpen && (
         <SettingsModal handleSettingsModal={handleSettingsModal} />
       )}
-      {isLoading && <Loading />}
-      {!isLoading && !activeAccount && (
+      {(isLoading || isAuthLoading) && <Loading />}
+      {!isLoading && !isAuthLoading && !activeAccount && (
         <>
           <h1 className="title-text large">Account not found ...</h1>
           <br />
@@ -54,7 +56,7 @@ const Account = ({ id }) => {
           </h3>
         </>
       )}
-      {!isLoading && activeAccount && (
+      {!isLoading && !isAuthLoading && activeAccount && (
         <>
           <div className="flex-row around">
             <div className="account-card" name="account-wrapper">
@@ -76,24 +78,28 @@ const Account = ({ id }) => {
               </h3>
             </div>
           </div>
-          <br />
-          <br />
-          <br />
-          <br />
-          <div className="flex-row center">
-            <button
-              className={`button-${theme} large`}
-              onClick={() => handleFundModal("deposit")}
-            >
-              DEPOSIT
-            </button>
-            <button
-              className={`button-${theme} large`}
-              onClick={() => handleFundModal("withdraw")}
-            >
-              WITHDRAW
-            </button>
-          </div>
+          {isAuthenticated && (
+            <>
+              <br />
+              <br />
+              <br />
+              <br />
+              <div className="flex-row center">
+                <button
+                  className={`button-${theme} large`}
+                  onClick={() => handleFundModal("deposit")}
+                >
+                  DEPOSIT
+                </button>
+                <button
+                  className={`button-${theme} large`}
+                  onClick={() => handleFundModal("withdraw")}
+                >
+                  WITHDRAW
+                </button>
+              </div>
+            </>
+          )}
           <br />
           <br />
           <Wishlist />

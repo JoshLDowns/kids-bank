@@ -2,6 +2,20 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const Accounts = require("./models");
+const jwt = require("jsonwebtoken");
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"]
+  const token = authHeader && authHeader.split(" ")[1]
+
+  if (!token) return res.status(400).json({errors: "invalid", info: "Invalid User"})
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) res.status(403).json({errors: "invalid", info: "Invalid Token"})
+    req.user = user
+    next()
+  })
+}
 
 router.get("/", (_req, res) => {
   Accounts.find({})
@@ -27,7 +41,7 @@ router.get("/:id", (req, res) => {
     );
 });
 
-router.patch("/:id/update", (req, res) => {
+router.patch("/:id/update", authenticateToken, (req, res) => {
   const id = req.params.id;
   const { field, value } = req.body;
   Accounts.findByIdAndUpdate(id, { [field]: value }, { new: true, useFindAndModify: false })
@@ -41,7 +55,7 @@ router.patch("/:id/update", (req, res) => {
     });
 });
 
-router.post("/new", (req, res) => {
+router.post("/new", authenticateToken, (req, res) => {
   const { username, spend, savings, avatarUrl } = req.body;
   const newAccount = new Accounts({
     username: username,
@@ -62,7 +76,7 @@ router.post("/new", (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", authenticateToken, (req, res) => {
   const id = req.params.id;
   const query = Accounts.where({ _id: id });
   query
@@ -76,14 +90,5 @@ router.delete("/:id", (req, res) => {
         .json({ errors: err.toString(), info: "Account could not be deleted" });
     });
 });
-
-router.post("/authorize", (req, res) => {
-  const { password } = req.body;
-  if (password === process.env.USER_PASS) {
-    res.status(200).json({status: "ok"})
-  } else {
-    res.status(400).json({errors: "invalid", info: "Invalid Password"})
-  }
-})
 
 module.exports = router;
