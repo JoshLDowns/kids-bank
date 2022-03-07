@@ -5,16 +5,20 @@ const Accounts = require("./models");
 const jwt = require("jsonwebtoken");
 
 const authenticateToken = (req, res, next) => {
+  const { field } = req.body
+
   const authHeader = req.headers["authorization"]
   const token = authHeader && authHeader.split(" ")[1]
+  if (field !== "wishlist" && field !== "avatarUrl") {
 
-  if (!token) return res.status(400).json({errors: "invalid", info: "Invalid User"})
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) res.status(403).json({errors: "invalid", info: "Invalid Token"})
-    req.user = user
-    next()
-  })
+    if (!token) return res.status(400).json({errors: "invalid", info: "Invalid User"})
+    
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+      if (err) res.status(403).json({errors: "invalid", info: "Invalid Token"})
+      req.user = user
+      next()
+    })
+  } else next()
 }
 
 router.get("/", (_req, res) => {
